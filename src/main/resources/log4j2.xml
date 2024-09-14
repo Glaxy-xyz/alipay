@@ -1,0 +1,80 @@
+<configuration status="ALL" monitorInterval="30">
+    <Properties>
+        <Property name="pattern">%d|%p|%l|%m%n</Property>
+        <Property name="logPath">/logs</Property>
+    </Properties>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern}"/>
+        </Console>
+        <RollingRandomAccessFile name="debug"
+                                 immediateFlush="false"
+                                 fileName="${logPath}/debug.log"
+                                 filePattern="${logPath}/debug-%d{yyyy-MM-dd}.log">
+            <Filters>
+                <ThresholdFilter level="DEBUG"/>
+                <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            </Policies>
+            <DefaultRolloverStrategy max="72"/>
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile name="info"
+                                 immediateFlush="true"
+                                 fileName="${logPath}/info.log"
+                                 filePattern="${logPath}/%d{yyyy-MM-dd}/info_%i.log">
+            <Filters>
+                <ThresholdFilter level="INFO"/>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="72">
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile name="warn"
+                                 immediateFlush="true"
+                                 fileName="${logPath}/warn.log"
+                                 filePattern="${logPath}/%d{yyyy-MM-dd}/warn_%i.log">
+            <Filters>
+                <ThresholdFilter level="WARN"/>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="72"/>
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile name="error"
+                                 immediateFlush="true"
+                                 fileName="${logPath}/error.log"
+                                 filePattern="${logPath}/%d{yyyy-MM-dd}/error_%i.log">
+            <PatternLayout pattern="${pattern}"/>
+            <Filters>
+                <ThresholdFilter level="ERROR"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="72"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="com" level="INFO">
+            <AppenderRef ref="info"/>
+            <AppenderRef ref="warn"/>
+            <AppenderRef ref="error"/>
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="console"/>
+        </Root>
+    </Loggers>
+</configuration>
